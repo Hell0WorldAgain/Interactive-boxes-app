@@ -65,8 +65,9 @@ export default function Home() {
 
   return (
     <div className="wrapper">
-      <h1 className="heading">Click Boxes Playground</h1>
-
+      <h1 className="heading">Interactive Box Creation</h1>
+      <p>Enter any number between 5 - 25 to generate boxes</p>
+      <br/>
       <InputField onCreate={makeSquares} />
 
       <BoxLayout

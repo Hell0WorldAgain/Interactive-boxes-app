@@ -25,16 +25,16 @@ export default function InputField({ onCreate }) {
 
   return (
     <form className="formBar" onSubmit={handleSubmit}>
-      <label>How many boxes?</label>
+      <label> Box Count?</label>
       <input
         type="number"
         min="5"
         max="25"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="e.g. 10"
+        placeholder="10"
       />
-      <button type="submit">Make</button>
+      <button type="submit">Generate</button>
       {error && <div className="warn">{error}</div>}
     </form>
   );
