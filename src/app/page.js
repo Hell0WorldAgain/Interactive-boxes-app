@@ -11,7 +11,6 @@ export default function Home() {
   const [resetting, setResetting] = useState(false);
   const timerRef = useRef(null);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => timerRef.current && clearInterval(timerRef.current);
   }, []);

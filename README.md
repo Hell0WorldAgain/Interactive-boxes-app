@@ -2,6 +2,8 @@
 An Interactive and responsive web app for boxes of limit number that changes it's state on click
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+To test it, click on the vercel [link] (https://interactive-boxes-dcja16h2j-abhisheks-projects-a45c28af.vercel.app/), enter any number b/w 5-25 in the input box to generate boxes of that count. Try clicking on those boxes one-by-one randomely, once you're finished with clicking on all it'll automatically started reverting to it's initial state.
+
 ## Getting Started
 
 First, run the development server:
