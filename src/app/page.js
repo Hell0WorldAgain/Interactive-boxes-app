@@ -1,64 +1,61 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import InputForm from "../components/InputForm";
-import BoxGrid from "../components/BoxGrid";
-import "../styles/Boxes.css";
+import InputField from "../components/InputField";
+import BoxLayout from "../components/BoxLayout";
+import "../styles/main.css";
 
-export default function HomePage() {
-  const [n, setN] = useState(null);
-  const [boxes, setBoxes] = useState([]);
-  const [clickOrder, setClickOrder] = useState([]);
-  const [isReverting, setIsReverting] = useState(false);
-  const revertIntervalRef = useRef(null);
+export default function Home() {
+  const [total, setTotal] = useState(null);
+  const [squares, setSquares] = useState([]);
+  const [clicks, setClicks] = useState([]);
+  const [resetting, setResetting] = useState(false);
+  const timerRef = useRef(null);
 
+  // Cleanup on unmount
   useEffect(() => {
-    return () => {
-      if (revertIntervalRef.current) clearInterval(revertIntervalRef.current);
-    };
+    return () => timerRef.current && clearInterval(timerRef.current);
   }, []);
 
-  const handleGenerate = (num) => {
-    setN(num);
-    setBoxes(Array(num).fill(false));
-    setClickOrder([]);
-    setIsReverting(false);
-    if (revertIntervalRef.current) {
-      clearInterval(revertIntervalRef.current);
-      revertIntervalRef.current = null;
+  const makeSquares = (count) => {
+    setTotal(count);
+    setSquares(Array(count).fill(false));
+    setClicks([]);
+    setResetting(false);
+    if (timerRef.current) clearInterval(timerRef.current);
+  };
+
+  const toggleSquare = (i) => {
+    if (resetting) return; // don't allow clicks while it's reverting
+
+    // Only react if this one is still red
+    if (!squares[i]) {
+      const updated = [...squares];
+      updated[i] = true;
+      const newList = [...clicks, i];
+      setSquares(updated);
+      setClicks(newList);
+
+      // If all have turned green, start reverting process
+      if (newList.length === updated.length) startReverse(newList);
     }
   };
 
-  const handleBoxClick = (idx) => {
-    if (isReverting) return;
+  const startReverse = (order) => {
+    if (!order.length) return;
+    setResetting(true);
 
-    if (!boxes[idx]) {
-      const updated = [...boxes];
-      updated[idx] = true;
-      const newOrder = [...clickOrder, idx];
-      setBoxes(updated);
-      setClickOrder(newOrder);
-
-      if (newOrder.length === updated.length) {
-        startRevert(newOrder);
-      }
-    }
-  };
-
-  const startRevert = (order) => {
-    if (!order || order.length === 0) return;
-    setIsReverting(true);
-    const toRevert = [...order];
-
-    revertIntervalRef.current = setInterval(() => {
-      if (toRevert.length === 0) {
-        clearInterval(revertIntervalRef.current);
-        revertIntervalRef.current = null;
-        setIsReverting(false);
-        setClickOrder([]);
+    const back = [...order];
+    timerRef.current = setInterval(() => {
+      if (!back.length) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+        setResetting(false);
+        setClicks([]);
         return;
       }
-      const last = toRevert.pop();
-      setBoxes((prev) => {
+
+      const last = back.pop();
+      setSquares((prev) => {
         const copy = [...prev];
         copy[last] = false;
         return copy;
@@ -67,16 +64,16 @@ export default function HomePage() {
   };
 
   return (
-    <div className="container">
-      <h1 className="title">Responsive Boxes App</h1>
+    <div className="wrapper">
+      <h1 className="heading">Click Boxes Playground</h1>
 
-      <InputForm onGenerate={handleGenerate} />
+      <InputField onCreate={makeSquares} />
 
-      <BoxGrid
-        boxes={boxes}
-        onClick={handleBoxClick}
-        isReverting={isReverting}
-        clickOrder={clickOrder}
+      <BoxLayout
+        boxes={squares}
+        onBoxClick={toggleSquare}
+        active={resetting}
+        clicked={clicks}
       />
     </div>
   );
