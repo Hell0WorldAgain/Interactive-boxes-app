@@ -24,9 +24,8 @@ export default function Home() {
   };
 
   const toggleSquare = (i) => {
-    if (resetting) return; // don't allow clicks while it's reverting
+    if (resetting) return;
 
-    // Only react if this one is still red
     if (!squares[i]) {
       const updated = [...squares];
       updated[i] = true;
@@ -34,7 +33,6 @@ export default function Home() {
       setSquares(updated);
       setClicks(newList);
 
-      // If all have turned green, start reverting process
       if (newList.length === updated.length) startReverse(newList);
     }
   };
@@ -65,7 +63,9 @@ export default function Home() {
   return (
     <div className="wrapper">
       <h1 className="heading">Interactive Box Creation</h1>
-      <p>Enter any number between 5 - 25 to generate boxes</p>
+      <p>Enter any number between 5 - 25 to generate boxes.</p>
+      <br/>
+      <p>[ Try clicking on those boxes one-by-one randomely, once you're finished with clicking on all it'll automatically started reverting to it's original color. ]</p>
       <br/>
       <InputField onCreate={makeSquares} />
 
